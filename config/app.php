@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    // paginate limit
+    'pagination_size' => 10,
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -194,6 +196,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
 
     ],

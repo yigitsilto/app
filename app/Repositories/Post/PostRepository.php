@@ -2,33 +2,38 @@
 
 namespace App\Repositories\Post;
 
+use App\Http\Resources\Post\PostResource;
 use App\Models\Post;
 use Illuminate\Support\Collection;
 
 class PostRepository implements PostRepositoryInterface {
 
-    public function getAll(): \Illuminate\Database\Eloquent\Collection
+    public function getAll()
     {
-        return Post::all();
+        return Post::with('user')->paginate(config('app.pagination_size'));
     }
 
-    public function getById($id): \App\Models\Post
+    public function getById(int $id): \Illuminate\Database\Eloquent\Builder|array|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
     {
-        // TODO: Implement getById() method.
+        return Post::with('user')->findOrFail($id);
     }
 
-    public function create(array $data): \App\Models\Post
+    public function create(array $data): Post
     {
-        // TODO: Implement create() method.
+        return Post::create($data);
     }
 
-    public function update($id, array $data): \App\Models\Post
+    public function update($id, array $data): \Illuminate\Database\Eloquent\Collection
     {
         // TODO: Implement update() method.
     }
 
-    public function delete($id): bool
+    public function delete(int $id): bool
     {
-        // TODO: Implement delete() method.
+        $post = Post::findOrFail($id);
+        if($post->user_id != auth()->id()) {
+            throw new \Exception('You are not allowed to delete this post');
+        }
+       return Post::destroy($id);
     }
 }
